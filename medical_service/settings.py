@@ -38,7 +38,8 @@ INSTALLED_APPS = [
 	'rest_framework',
 	'medicalapp',
 	'django_extensions',
-	'drf_yasg'
+	'drf_yasg',
+	'whitenoise'
 ]
 
 MIDDLEWARE = [
@@ -49,6 +50,7 @@ MIDDLEWARE = [
 	'django.contrib.auth.middleware.AuthenticationMiddleware',
 	'django.contrib.messages.middleware.MessageMiddleware',
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'whitenoise.middleware.WhiteNoiseMiddleware'
 ]
 
 ROOT_URLCONF = 'medical_service.urls'
@@ -113,10 +115,10 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = '/staticfiles/'
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
-	os.path.join(BASE_DIR, 'medicalapp', 'staticfiles'),
+	os.path.join(BASE_DIR, 'medicalapp', 'static'),
 ]
 
 # Default primary key field type
