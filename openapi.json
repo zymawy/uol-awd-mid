@@ -1,0 +1,628 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Medical API",
+    "description": "API documentation for the Medical service",
+    "termsOfService": "https://www.google.com/policies/terms/",
+    "contact": {
+      "email": "uol@medical.local"
+    },
+    "license": {
+      "name": "BSD License"
+    },
+    "version": "v1"
+  },
+  "host": "127.0.0.1:8000",
+  "schemes": [
+    "http"
+  ],
+  "basePath": "/api",
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "securityDefinitions": {
+    "Basic": {
+      "type": "basic"
+    }
+  },
+  "security": [
+    {
+      "Basic": [
+
+      ]
+    }
+  ],
+  "paths": {
+    "/medicalrecords/": {
+      "get": {
+        "operationId": "medicalrecords_list",
+        "description": "",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "description": "A search term.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "A page number within the paginated result set.",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "detail",
+            "in": "query",
+            "description": "include all relevant medical records relations [detail=true]",
+            "type": "string"
+          },
+          {
+            "name": "term",
+            "in": "query",
+            "description": "Filter by term",
+            "type": "string"
+          },
+          {
+            "name": "mesh_id",
+            "in": "query",
+            "description": "Filter by mesh id",
+            "type": "string"
+          },
+          {
+            "name": "date_revised",
+            "in": "query",
+            "description": "Filter by date revised",
+            "type": "string"
+          },
+          {
+            "name": "entry_date",
+            "in": "query",
+            "description": "Filter by entry date",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "required": [
+                "count",
+                "results"
+              ],
+              "type": "object",
+              "properties": {
+                "count": {
+                  "type": "integer"
+                },
+                "next": {
+                  "type": "string",
+                  "format": "uri",
+                  "x-nullable": true
+                },
+                "previous": {
+                  "type": "string",
+                  "format": "uri",
+                  "x-nullable": true
+                },
+                "results": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/MedicalRecord"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "medicalrecords"
+        ]
+      },
+      "post": {
+        "operationId": "medicalrecords_create",
+        "description": "",
+        "parameters": [
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/MedicalRecord"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/MedicalRecord"
+            }
+          }
+        },
+        "tags": [
+          "medicalrecords"
+        ]
+      },
+      "parameters": [
+
+      ]
+    },
+    "/medicalrecords/complex/": {
+      "get": {
+        "operationId": "medicalrecords_complex",
+        "description": "",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "description": "A search term.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "A page number within the paginated result set.",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "term_contains",
+            "in": "query",
+            "description": "search term",
+            "type": "string"
+          },
+          {
+            "name": "definition_contains",
+            "in": "query",
+            "description": "search within definition",
+            "type": "string"
+          },
+          {
+            "name": "date_after",
+            "in": "query",
+            "description": "get any recoreds after this date",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "required": [
+                "count",
+                "results"
+              ],
+              "type": "object",
+              "properties": {
+                "count": {
+                  "type": "integer"
+                },
+                "next": {
+                  "type": "string",
+                  "format": "uri",
+                  "x-nullable": true
+                },
+                "previous": {
+                  "type": "string",
+                  "format": "uri",
+                  "x-nullable": true
+                },
+                "results": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/MedicalRecord"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "medicalrecords"
+        ]
+      },
+      "parameters": [
+
+      ]
+    },
+    "/medicalrecords/count/": {
+      "get": {
+        "operationId": "medicalrecords_count",
+        "description": "",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "description": "A search term.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "A page number within the paginated result set.",
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "required": [
+                "count",
+                "results"
+              ],
+              "type": "object",
+              "properties": {
+                "count": {
+                  "type": "integer"
+                },
+                "next": {
+                  "type": "string",
+                  "format": "uri",
+                  "x-nullable": true
+                },
+                "previous": {
+                  "type": "string",
+                  "format": "uri",
+                  "x-nullable": true
+                },
+                "results": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/MedicalRecord"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "medicalrecords"
+        ]
+      },
+      "parameters": [
+
+      ]
+    },
+    "/medicalrecords/{id}/": {
+      "get": {
+        "operationId": "medicalrecords_read",
+        "description": "",
+        "parameters": [
+
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/MedicalRecord"
+            }
+          }
+        },
+        "tags": [
+          "medicalrecords"
+        ]
+      },
+      "put": {
+        "operationId": "medicalrecords_update",
+        "description": "",
+        "parameters": [
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/MedicalRecord"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/MedicalRecord"
+            }
+          }
+        },
+        "tags": [
+          "medicalrecords"
+        ]
+      },
+      "patch": {
+        "operationId": "medicalrecords_partial_update",
+        "description": "",
+        "parameters": [
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/MedicalRecord"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/MedicalRecord"
+            }
+          }
+        },
+        "tags": [
+          "medicalrecords"
+        ]
+      },
+      "delete": {
+        "operationId": "medicalrecords_delete",
+        "description": "",
+        "parameters": [
+
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "medicalrecords"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "A unique integer value identifying this medical record.",
+          "required": true,
+          "type": "integer"
+        }
+      ]
+    },
+    "/synonyms/": {
+      "get": {
+        "operationId": "synonyms_list",
+        "description": "",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "A page number within the paginated result set.",
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "required": [
+                "count",
+                "results"
+              ],
+              "type": "object",
+              "properties": {
+                "count": {
+                  "type": "integer"
+                },
+                "next": {
+                  "type": "string",
+                  "format": "uri",
+                  "x-nullable": true
+                },
+                "previous": {
+                  "type": "string",
+                  "format": "uri",
+                  "x-nullable": true
+                },
+                "results": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Synonym"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "synonyms"
+        ]
+      },
+      "post": {
+        "operationId": "synonyms_create",
+        "description": "",
+        "parameters": [
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Synonym"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Synonym"
+            }
+          }
+        },
+        "tags": [
+          "synonyms"
+        ]
+      },
+      "parameters": [
+
+      ]
+    },
+    "/synonyms/{id}/": {
+      "get": {
+        "operationId": "synonyms_read",
+        "description": "",
+        "parameters": [
+
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Synonym"
+            }
+          }
+        },
+        "tags": [
+          "synonyms"
+        ]
+      },
+      "put": {
+        "operationId": "synonyms_update",
+        "description": "",
+        "parameters": [
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Synonym"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Synonym"
+            }
+          }
+        },
+        "tags": [
+          "synonyms"
+        ]
+      },
+      "patch": {
+        "operationId": "synonyms_partial_update",
+        "description": "",
+        "parameters": [
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Synonym"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/Synonym"
+            }
+          }
+        },
+        "tags": [
+          "synonyms"
+        ]
+      },
+      "delete": {
+        "operationId": "synonyms_delete",
+        "description": "",
+        "parameters": [
+
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "synonyms"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "A unique integer value identifying this synonym.",
+          "required": true,
+          "type": "integer"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "MedicalRecord": {
+      "required": [
+        "mesh_id",
+        "term",
+        "definition",
+        "entry_date"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "title": "ID",
+          "type": "integer",
+          "readOnly": true
+        },
+        "mesh_id": {
+          "title": "Mesh id",
+          "type": "string",
+          "maxLength": 50,
+          "minLength": 1
+        },
+        "term": {
+          "title": "Term",
+          "type": "string",
+          "maxLength": 255,
+          "minLength": 1
+        },
+        "definition": {
+          "title": "Definition",
+          "type": "string",
+          "minLength": 1
+        },
+        "entry_date": {
+          "title": "Entry date",
+          "type": "string",
+          "format": "date-time"
+        },
+        "date_revised": {
+          "title": "Date revised",
+          "type": "string",
+          "format": "date-time",
+          "x-nullable": true
+        }
+      }
+    },
+    "Synonym": {
+      "required": [
+        "synonym"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "title": "ID",
+          "type": "integer",
+          "readOnly": true
+        },
+        "synonym": {
+          "title": "Synonym",
+          "type": "string",
+          "maxLength": 255,
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

@@ -41,6 +41,24 @@ class MedicalRecordSerializer(serializers.ModelSerializer):
 		fields = ['id', 'mesh_id', 'term', 'definition', 'entry_date',
 				  'date_revised']
 
+
+class MedicalRecordDetailSerializer(serializers.ModelSerializer):
+	synonyms = SynonymSerializer(many=True, required=False)
+	concepts = ConceptSerializer(many=True, required=False)
+	tree_numbers = TreeNumberSerializer(many=True, required=False)
+	pharmacological_actions = PharmacologicalActionSerializer(many=True,
+															  required=False)
+	allowable_qualifiers = AllowableQualifierSerializer(many=True,
+														required=False)
+
+	class Meta:
+		model = MedicalRecord
+		fields = ['id', 'mesh_id', 'term', 'definition', 'entry_date',
+				  'date_revised', 'synonyms', 'concepts',
+				  'tree_numbers', 'pharmacological_actions',
+				  'allowable_qualifiers']
+
+
 	def create(self, validated_data):
 		synonyms_data = validated_data.pop('synonyms', [])
 		concepts_data = validated_data.pop('concepts', [])
@@ -51,6 +69,7 @@ class MedicalRecordSerializer(serializers.ModelSerializer):
 													   [])
 		medical_record = MedicalRecord.objects.create(**validated_data)
 
+		print(synonyms_data)
 		for synonym_data in synonyms_data:
 			Synonym.objects.create(medical_record=medical_record,
 								   **synonym_data)
@@ -121,20 +140,3 @@ class MedicalRecordSerializer(serializers.ModelSerializer):
 												  **qualifier_data)
 
 		return record
-
-
-class MedicalRecordDetailSerializer(serializers.ModelSerializer):
-	synonyms = SynonymSerializer(many=True, required=False)
-	concepts = ConceptSerializer(many=True, required=False)
-	tree_numbers = TreeNumberSerializer(many=True, required=False)
-	pharmacological_actions = PharmacologicalActionSerializer(many=True,
-															  required=False)
-	allowable_qualifiers = AllowableQualifierSerializer(many=True,
-														required=False)
-
-	class Meta:
-		model = MedicalRecord
-		fields = ['id', 'mesh_id', 'term', 'definition', 'entry_date',
-				  'date_revised', 'synonyms', 'concepts',
-				  'tree_numbers', 'pharmacological_actions',
-				  'allowable_qualifiers']

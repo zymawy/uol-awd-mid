@@ -39,7 +39,7 @@ class MedicalRecordViewSet(viewsets.ModelViewSet):
 				return MedicalRecordDetailSerializer
 			else:
 				return MedicalRecordSerializer
-		return MedicalRecordSerializer
+		return MedicalRecordDetailSerializer
 
 	def get_queryset(self):
 		queryset = MedicalRecord.objects.all().order_by('entry_date')
