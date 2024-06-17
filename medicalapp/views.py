@@ -13,6 +13,7 @@ from asgiref.sync import sync_to_async
 from rest_framework.pagination import PageNumberPagination
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from rest_framework import filters
 
 
 class MedicalRecordPagination(PageNumberPagination):
@@ -23,8 +24,10 @@ class MedicalRecordViewSet(viewsets.ModelViewSet):
 	queryset = MedicalRecord.objects.all()
 	serializer_class = MedicalRecordSerializer
 	pagination_class = MedicalRecordPagination
-	ordering_fields = ['id', 'entry_date']
-	ordering = ['id']
+	# ordering_fields = ['id', 'entry_date', 'mesh_id']
+	ordering = ['id', 'mesh_id', 'entry_date']
+	filter_backends = [filters.SearchFilter]
+	search_fields = ['term', 'definition', '=mesh_id']
 
 	# permission_classes = [IsAdminOrReadOnly]
 
@@ -39,20 +42,26 @@ class MedicalRecordViewSet(viewsets.ModelViewSet):
 		return MedicalRecordSerializer
 
 	def get_queryset(self):
-		queryset = MedicalRecord.objects.all().order_by('entry_date')
+		queryset = MedicalRecord.objects.all()
 		term = self.request.query_params.get('term', None)
 		mesh_id = self.request.query_params.get('mesh_id', None)
 		date_revised = self.request.query_params.get('date_revised', None)
+		entry_date = self.request.query_params.get('entry_date', None)
 		if term:
 			queryset = queryset.filter(term__icontains=term)
 		if mesh_id:
 			queryset = queryset.filter(mesh_id__iexact=mesh_id)
 		if date_revised:
 			queryset = queryset.filter(date_revised__icontains=date_revised)
+		if entry_date:
+			queryset = queryset.filter(entry_date__gte=entry_date)
 		return queryset
 
 	@swagger_auto_schema(
 		manual_parameters=[
+			openapi.Parameter('detail', openapi.IN_QUERY,
+							  description="include all relevant medical records relations [detail=true]",
+							  type=openapi.TYPE_STRING),
 			openapi.Parameter('term', openapi.IN_QUERY,
 							  description="Filter by term",
 							  type=openapi.TYPE_STRING),
@@ -61,6 +70,9 @@ class MedicalRecordViewSet(viewsets.ModelViewSet):
 							  type=openapi.TYPE_STRING),
 			openapi.Parameter('date_revised', openapi.IN_QUERY,
 							  description="Filter by date revised",
+							  type=openapi.TYPE_STRING),
+			openapi.Parameter('entry_date', openapi.IN_QUERY,
+							  description="Filter by entry date",
 							  type=openapi.TYPE_STRING),
 		]
 	)
@@ -73,6 +85,19 @@ class MedicalRecordViewSet(viewsets.ModelViewSet):
 		return Response({'count': count})
 
 	@action(detail=False, methods=['get'])
+	@swagger_auto_schema(
+		manual_parameters=[
+			openapi.Parameter('term_contains', openapi.IN_QUERY,
+							  description="search term",
+							  type=openapi.TYPE_STRING),
+			openapi.Parameter('definition_contains', openapi.IN_QUERY,
+							  description="search within definition",
+							  type=openapi.TYPE_STRING),
+			openapi.Parameter('date_after', openapi.IN_QUERY,
+							  description="get any recoreds after this date",
+							  type=openapi.TYPE_STRING),
+		]
+	)
 	def complex(self, request):
 		term_contains = request.query_params.get('term_contains', '')
 		definition_contains = request.query_params.get('definition_contains',
@@ -94,8 +119,8 @@ class MedicalRecordViewSet(viewsets.ModelViewSet):
 				records = records.filter(entry_date__gte=date_after_parsed)
 			except ValueError:
 				return Response(
-					{'error': 'Invalid date format. Use YYYY-MM-DD.'},
-					status=400)
+					{'error': 'plz fix the format YYYY-MM-DD.'},
+					status=422)
 
 		serializer = MedicalRecordSerializer(records, many=True)
 		return Response(serializer.data)
@@ -104,7 +129,7 @@ class MedicalRecordViewSet(viewsets.ModelViewSet):
 class AsyncMedicalRecordView(View):
 	async def get(self, request, *args, **kwargs):
 		records = await sync_to_async(list)(
-			MedicalRecord.objects.all().order_by('entry_date'))
+			MedicalRecord.objects.all())
 		data = [record.as_dict() for record in records]
 		return JsonResponse(data, safe=False)
 

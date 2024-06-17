@@ -132,3 +132,7 @@ REST_FRAMEWORK = {
 	'EXCEPTION_HANDLER': 'medicalapp.exceptions.custom_exception_handler',
 	'PAGE_SIZE': 15,
 }
+# https://drf-yasg.readthedocs.io/en/stable/settings.html#use-session-auth
+SWAGGER_SETTINGS = {
+	'USE_SESSION_AUTH': False
+}

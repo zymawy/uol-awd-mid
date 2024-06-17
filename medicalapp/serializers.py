@@ -36,20 +36,10 @@ class AllowableQualifierSerializer(serializers.ModelSerializer):
 
 
 class MedicalRecordSerializer(serializers.ModelSerializer):
-	synonyms = SynonymSerializer(many=True, required=False)
-	concepts = ConceptSerializer(many=True, required=False)
-	tree_numbers = TreeNumberSerializer(many=True, required=False)
-	pharmacological_actions = PharmacologicalActionSerializer(many=True,
-															  required=False)
-	allowable_qualifiers = AllowableQualifierSerializer(many=True,
-														required=False)
-
 	class Meta:
 		model = MedicalRecord
 		fields = ['id', 'mesh_id', 'term', 'definition', 'entry_date',
-				  'date_revised', 'synonyms', 'concepts',
-				  'tree_numbers', 'pharmacological_actions',
-				  'allowable_qualifiers']
+				  'date_revised']
 
 	def create(self, validated_data):
 		synonyms_data = validated_data.pop('synonyms', [])
@@ -135,8 +125,16 @@ class MedicalRecordSerializer(serializers.ModelSerializer):
 
 class MedicalRecordDetailSerializer(serializers.ModelSerializer):
 	synonyms = SynonymSerializer(many=True, required=False)
+	concepts = ConceptSerializer(many=True, required=False)
+	tree_numbers = TreeNumberSerializer(many=True, required=False)
+	pharmacological_actions = PharmacologicalActionSerializer(many=True,
+															  required=False)
+	allowable_qualifiers = AllowableQualifierSerializer(many=True,
+														required=False)
 
 	class Meta:
 		model = MedicalRecord
 		fields = ['id', 'mesh_id', 'term', 'definition', 'entry_date',
-				  'date_revised', 'synonyms']
+				  'date_revised', 'synonyms', 'concepts',
+				  'tree_numbers', 'pharmacological_actions',
+				  'allowable_qualifiers']
