@@ -42,7 +42,7 @@ class MedicalRecordViewSet(viewsets.ModelViewSet):
 		return MedicalRecordSerializer
 
 	def get_queryset(self):
-		queryset = MedicalRecord.objects.all()
+		queryset = MedicalRecord.objects.all().order_by('entry_date')
 		term = self.request.query_params.get('term', None)
 		mesh_id = self.request.query_params.get('mesh_id', None)
 		date_revised = self.request.query_params.get('date_revised', None)
@@ -104,7 +104,7 @@ class MedicalRecordViewSet(viewsets.ModelViewSet):
 													   '')
 		date_after = request.query_params.get('date_after', '')
 
-		records = MedicalRecord.objects.all()
+		records = MedicalRecord.objects.all().order_by('entry_date')
 
 		if term_contains:
 			records = records.filter(term__icontains=term_contains)
@@ -129,7 +129,7 @@ class MedicalRecordViewSet(viewsets.ModelViewSet):
 class AsyncMedicalRecordView(View):
 	async def get(self, request, *args, **kwargs):
 		records = await sync_to_async(list)(
-			MedicalRecord.objects.all())
+			MedicalRecord.objects.all().order_by('entry_date'))
 		data = [record.as_dict() for record in records]
 		return JsonResponse(data, safe=False)
 

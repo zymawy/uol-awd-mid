@@ -73,7 +73,7 @@ class MedicalRecordSerializer(serializers.ModelSerializer):
 
 		return medical_record
 
-	def update(self, instance, validated_data):
+	def update(self, record, validated_data):
 		synonyms_data = validated_data.pop('synonyms', None)
 		concepts_data = validated_data.pop('concepts', None)
 		tree_numbers_data = validated_data.pop('tree_numbers', None)
@@ -82,45 +82,45 @@ class MedicalRecordSerializer(serializers.ModelSerializer):
 		allowable_qualifiers_data = validated_data.pop('allowable_qualifiers',
 													   None)
 
-		instance.mesh_id = validated_data.get('mesh_id', instance.mesh_id)
-		instance.term = validated_data.get('term', instance.term)
-		instance.definition = validated_data.get('definition',
-												 instance.definition)
-		instance.entry_date = validated_data.get('entry_date',
-												 instance.entry_date)
-		instance.date_revised = validated_data.get('date_revised',
-												   instance.date_revised)
-		instance.save()
+		record.mesh_id = validated_data.get('mesh_id', record.mesh_id)
+		record.term = validated_data.get('term', record.term)
+		record.definition = validated_data.get('definition',
+												 record.definition)
+		record.entry_date = validated_data.get('entry_date',
+												 record.entry_date)
+		record.date_revised = validated_data.get('date_revised',
+												   record.date_revised)
+		record.save()
 
 		if synonyms_data is not None:
-			instance.synonyms.all().delete()
+			record.synonyms.all().delete()
 			for synonym_data in synonyms_data:
-				Synonym.objects.create(medical_record=instance, **synonym_data)
+				Synonym.objects.create(medical_record=record, **synonym_data)
 
 		if concepts_data is not None:
-			instance.concepts.all().delete()
+			record.concepts.all().delete()
 			for concept_data in concepts_data:
-				Concept.objects.create(medical_record=instance, **concept_data)
+				Concept.objects.create(medical_record=record, **concept_data)
 
 		if tree_numbers_data is not None:
-			instance.tree_numbers.all().delete()
+			record.tree_numbers.all().delete()
 			for tree_number_data in tree_numbers_data:
-				TreeNumber.objects.create(medical_record=instance,
+				TreeNumber.objects.create(medical_record=record,
 										  **tree_number_data)
 
 		if pharmacological_actions_data is not None:
-			instance.pharmacological_actions.all().delete()
+			record.pharmacological_actions.all().delete()
 			for action_data in pharmacological_actions_data:
-				PharmacologicalAction.objects.create(medical_record=instance,
+				PharmacologicalAction.objects.create(medical_record=record,
 													 **action_data)
 
 		if allowable_qualifiers_data is not None:
-			instance.allowable_qualifiers.all().delete()
+			record.allowable_qualifiers.all().delete()
 			for qualifier_data in allowable_qualifiers_data:
-				AllowableQualifier.objects.create(medical_record=instance,
+				AllowableQualifier.objects.create(medical_record=record,
 												  **qualifier_data)
 
-		return instance
+		return record
 
 
 class MedicalRecordDetailSerializer(serializers.ModelSerializer):

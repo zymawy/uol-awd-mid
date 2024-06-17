@@ -108,7 +108,7 @@ class MedicalRecordTests(HypothesisTestCase):
 
 	def test_get_medical_record(self):
 		response = self.client.get(
-			reverse('medicalrecord-detail', args=[self.medical_record.id]))
+			reverse('medicalrecord-detail', args=[self.medical_record.id]) + '?detail=true')
 		self.assertEqual(response.status_code, status.HTTP_200_OK)
 		self.assertEqual(response.data['term'], 'Test Term')
 		self.assertEqual(len(response.data['synonyms']), 2)
@@ -141,7 +141,6 @@ class MedicalRecordTests(HypothesisTestCase):
 		self.assertEqual(response.status_code, status.HTTP_200_OK)
 		self.assertContains(response, 'Test Definition')
 		response = self.client.get('/api/medicalrecords/complex/?date_after=2023-01-01')
-		print(response.json())  # Print the response content for debugging
 		self.assertEqual(response.status_code, status.HTTP_200_OK)
 		self.assertContains(response, 'Test Term')
 		# self.assertContains(response, 'Another Term')
