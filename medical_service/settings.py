@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-f_t5^@t()u32eyor^s@bsj@&*8@m-1&9^*s%3ph4+^vli*#2v6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['urchin-app-ivuin.ondigitalocean.app']
 
 # Application definition
 
